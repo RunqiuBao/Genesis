@@ -22,4 +22,4 @@ scikit-learn==1.5.2
 networkx==2.8.8 
 scikit-image==0.19.3 
 trimesh 
-numpy
+numpy==1.26.0
