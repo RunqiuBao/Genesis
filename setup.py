@@ -81,6 +81,7 @@ setup(
     version='0.2.1',
     packages=find_packages(),
     package_data={
-        'genesis': GetFileList('genesis/assets','genesis')
+        'genesis': GetFileList('genesis/assets','genesis'),
+        'genesis.ext.pyrender': GetFileList('genesis/ext/pyrender/shaders','genesis/ext/pyrender') + GetFileList('genesis/ext/pyrender/fonts','genesis/ext/pyrender'),
     },
 )
