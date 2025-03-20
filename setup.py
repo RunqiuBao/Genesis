@@ -8,6 +8,13 @@ import numpy as np
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext as _build_ext
 
+# Ciel
+from setuptools import find_packages
+def GetFileList(path, relative=None):
+    files = [os.path.join(dirpath, filename) for dirpath, dirnames, filenames in os.walk(path) for filename in filenames]
+    if relative is not None:
+        files = list(map(lambda filename: os.path.relpath(filename, relative), files))
+    return files
 
 # Define macros for cython
 macros = []
@@ -68,4 +75,12 @@ setup(
             define_macros=macros,
         ),
     ],
+
+    # Ciel
+    name='genesis-world',
+    version='0.2.1',
+    packages=find_packages(),
+    package_data={
+        'genesis': GetFileList('genesis/assets','genesis')
+    },
 )
