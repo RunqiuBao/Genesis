@@ -4,7 +4,11 @@ from contextlib import redirect_stdout
 
 import numpy as np
 import pyvista as pv
-import tetgen
+
+try:
+    import tetgen
+except ImportError:
+    tetgen = None
 
 import genesis as gs
 import genesis.utils.mesh as mu
