@@ -408,6 +408,10 @@ class Simulator(RBC):
         """The list of entities in the simulator."""
         return self._entities
 
+    @entities.setter
+    def entities(self, entities):
+        self._entities = entities
+
     @property
     def substeps_local(self):
         """The number of substeps stored in local memory."""

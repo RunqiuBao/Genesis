@@ -63,6 +63,10 @@ class Solver(RBC):
     def entities(self):
         return self._entities
 
+    @entities.setter
+    def entities(self, entities):
+        self._entities = entities
+
     @property
     def n_entities(self):
         return len(self._entities)

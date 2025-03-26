@@ -1034,6 +1034,10 @@ class Scene(RBC):
     def entities(self):
         """All the entities in the scene."""
         return self._sim.entities
+    
+    @entities.setter
+    def entities(self, entities):
+        self._sim.entities = entities
 
     @property
     def emitters(self):
