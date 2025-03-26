@@ -122,7 +122,8 @@ class Viewer(RBC):
         z = pos - lookat
         R = gu.z_up_to_R(z, up=up)
         pose = gu.trans_R_to_T(pos, R)
-        self._camera_node = self.context.add_node(pyrender.PerspectiveCamera(yfov=yfov), pose=pose)
+        new_camera = pyrender.PerspectiveCamera(yfov=yfov)
+        self._camera_node = self.context.add_node(new_camera, name=new_camera.name, pose=pose)
 
     def update(self):
         if self._followed_entity is not None:

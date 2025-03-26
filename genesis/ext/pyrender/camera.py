@@ -32,8 +32,12 @@ class Camera(object):
     name : str, optional
         The user-defined name of this object.
     """
+    __uniqueID = 0
 
     def __init__(self, znear=DEFAULT_Z_NEAR, zfar=DEFAULT_Z_FAR, name=None):
+        if name is None:
+            name = f"Camera_{Camera.__uniqueID}"
+            Camera.__uniqueID += 1
         self.name = name
         self.znear = znear
         self.zfar = zfar
