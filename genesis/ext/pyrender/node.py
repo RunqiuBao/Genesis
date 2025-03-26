@@ -47,7 +47,7 @@ class Node(object):
 
     def __init__(
         self,
-        name=None,
+        name,
         camera=None,
         children=None,
         skin=None,
@@ -59,6 +59,7 @@ class Node(object):
         weights=None,
         light=None,
     ):
+        assert name is not None
         # Set defaults
         if children is None:
             children = []

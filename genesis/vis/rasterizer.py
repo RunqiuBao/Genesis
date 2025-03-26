@@ -32,15 +32,13 @@ class Rasterizer(RBC):
 
     def add_camera(self, camera):
         from genesis.ext import pyrender
-
-        self._camera_nodes[camera.uid] = self._context.add_node(
-            pyrender.PerspectiveCamera(
-                yfov=np.deg2rad(camera.fov),
-                znear=camera.near,
-                zfar=camera.far,
-                aspectRatio=camera.aspect_ratio,
-            ),
+        new_camera = pyrender.PerspectiveCamera(
+            yfov=np.deg2rad(camera.fov),
+            znear=camera.near,
+            zfar=camera.far,
+            aspectRatio=camera.aspect_ratio,
         )
+        self._camera_nodes[camera.uid] = self._context.add_node(new_camera, name=new_camera.name)
         self._camera_targets[camera.uid] = pyrender.Renderer(camera.res[0], camera.res[1], self._context.jit)
 
     def update_camera(self, camera):

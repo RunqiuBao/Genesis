@@ -160,6 +160,7 @@ class RasterizerContext:
                         mu.create_camera_frustum(camera, color=(1.0, 1.0, 1.0, 0.3)),
                         smooth=False,
                     ),
+                    name=f"camera_frustum_{camera.uid}",
                     pose=camera.transform,
                 )
             self.camera_frustum_shown = True
@@ -288,7 +289,8 @@ class RasterizerContext:
                             ),
                             is_floor=isinstance(rigid_entity._morph, gs.morphs.Plane),
                             env_shared=not self.env_separate_rigid,
-                        )
+                        ),
+                        name="rigid_{}".format(str(geom.idx).zfill(6)),
                     )
                     if isinstance(rigid_entity._morph, gs.morphs.Plane):
                         self.set_reflection_mat(geom_T)
@@ -775,10 +777,12 @@ class RasterizerContext:
             z = -np.array(light["dir"])
             R = gu.z_up_to_R(z)
             pose = gu.R_to_T(R)
-            self.add_node(pyrender.DirectionalLight(color=light["color"], intensity=light["intensity"]), pose=pose)
+            new_light = pyrender.DirectionalLight(color=light["color"], intensity=light["intensity"])
+            self.add_node(obj=new_light, name=new_light.name, pose=pose)
         elif light["type"] == "point":
             pose = gu.trans_to_T(np.array(light["pos"]))
-            self.add_node(pyrender.PointLight(color=light["color"], intensity=light["intensity"]), pose=pose)
+            new_light = pyrender.PointLight(color=light["color"], intensity=light["intensity"])
+            self.add_node(obj=new_light, name=new_light.name, pose=pose)
         else:
             gs.raise_exception(f"Unsupported light type: {light['type']}")
 

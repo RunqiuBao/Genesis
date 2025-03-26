@@ -366,7 +366,7 @@ class Viewer(pyglet.window.Window):
         else:
             camera = self._default_orth_cam
 
-        self._camera_node = Node(matrix=self._default_camera_pose, camera=camera)
+        self._camera_node = Node(name=camera.name, matrix=self._default_camera_pose, camera=camera)
         self.scene.add_node(self._camera_node)
         self.scene.main_camera_node = self._camera_node
         self._reset_view()
@@ -1274,13 +1274,13 @@ class Viewer(pyglet.window.Window):
 
             matrix = np.eye(4)
             matrix[:3, :3] = np.c_[x, y, z]
-            nodes.append(Node(light=DirectionalLight(color=np.ones(3), intensity=1.0), matrix=matrix))
+            nodes.append(Node(name="raymond_lights_phi{:.2f}_theta{:.2f}".format(phi, theta), light=DirectionalLight(color=np.ones(3), intensity=1.0), matrix=matrix))
 
         return nodes
 
     def _create_direct_light(self):
         light = DirectionalLight(color=np.ones(3), intensity=1.0)
-        n = Node(light=light, matrix=np.eye(4))
+        n = Node(name=light.name, light=light, matrix=np.eye(4))
         return n
 
     def _location_to_x_y(self, location):

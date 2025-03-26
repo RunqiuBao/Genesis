@@ -31,8 +31,12 @@ class Light(object):
     name : str, optional
         Name of the light.
     """
+    __uniqueID = 0
 
     def __init__(self, color=None, intensity=None, name=None):
+        if name is None:
+            name = "Light_{}".format(Light.__uniqueID)
+            Light.__uniqueID += 1
 
         if color is None:
             color = np.ones(3)
