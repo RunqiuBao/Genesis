@@ -174,7 +174,7 @@ class RasterizerContext:
 
     def on_world_frame(self):
         if not self.world_frame_shown:
-            self.world_frame_node = self.add_node(pyrender.Mesh.from_trimesh(self.world_frame_mesh, smooth=True))
+            self.world_frame_node = self.add_node(pyrender.Mesh.from_trimesh(self.world_frame_mesh, smooth=True), name="world_frame")
             self.world_frame_shown = True
 
     def off_world_frame(self):
@@ -522,7 +522,7 @@ class RasterizerContext:
                         mesh.visual = mu.surface_uvs_to_trimesh_visual(pbd_entity.surface, n_verts=len(mesh.vertices))
                         tfs = np.tile(np.eye(4), (pbd_entity.n_particles, 1, 1))
                         tfs[:, :3, 3] = pbd_entity.init_particles
-                        self.add_static_node(pbd_entity.uid, pyrender.Mesh.from_trimesh(mesh, smooth=True, poses=tfs))
+                        self.add_static_node(pbd_entity.uid, pyrender.Mesh.from_trimesh(mesh, smooth=True, poses=tfs), name="pbd_entity_" + str(pbd_entity.uid))
 
                     elif self.render_particle_as == "tet":
                         mesh = mu.create_tets_mesh(
@@ -530,7 +530,7 @@ class RasterizerContext:
                         )
                         mesh.visual = mu.surface_uvs_to_trimesh_visual(pbd_entity.surface, n_verts=len(mesh.vertices))
                         pbd_entity._tets_mesh = mesh
-                        self.add_static_node(pbd_entity.uid, pyrender.Mesh.from_trimesh(mesh, smooth=False))
+                        self.add_static_node(pbd_entity.uid, pyrender.Mesh.from_trimesh(mesh, smooth=False), name="pbd_entity_" + str(pbd_entity.uid))
 
                 elif pbd_entity.surface.vis_mode == "visual":
                     self.add_static_node(
@@ -540,6 +540,7 @@ class RasterizerContext:
                             smooth=pbd_entity.surface.smooth,
                             double_sided=pbd_entity._surface.double_sided,
                         ),
+                        name="pbd_entity_" + str(pbd_entity.uid),
                     )
 
             # boundary
@@ -557,7 +558,8 @@ class RasterizerContext:
                             color=(0.0, 1.0, 1.0, 1.0),
                         ),
                         smooth=True,
-                    )
+                    ),
+                    name="pbd_boundary",
                 )
 
     def update_pbd(self, buffer_updates):
