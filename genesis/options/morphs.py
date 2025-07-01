@@ -266,7 +266,7 @@ class Plane(Primitive):
     textureImageName: Optional[str] = None
 
     def __init__(self, **data):
-        self.textureImageName = data.pop("textureImagePath") if "textureImagePath" in data else "checker.png"
+        self.textureImageName = data.pop("textureImageName") if "textureImageName" in data else "checker.png"
         super().__init__(**data)
 
         if not isinstance(self.normal, tuple) or len(self.normal) != 3:
