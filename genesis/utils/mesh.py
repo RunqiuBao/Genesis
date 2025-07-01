@@ -9,7 +9,12 @@ import igl
 import numpy as np
 import pygltflib
 import pyvista as pv
-import tetgen
+
+try:
+    import tetgen
+except ImportError:
+    tetgen = None
+
 from PIL import Image
 
 import genesis as gs
