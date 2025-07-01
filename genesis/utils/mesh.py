@@ -1020,7 +1020,7 @@ def create_cylinder(radius, height, sections=None, color=(1.0, 1.0, 1.0, 1.0)):
     return mesh
 
 
-def create_plane(size=1000, color=None, normal=(0, 0, 1)):
+def create_plane(size=1000, color=None, normal=(0, 0, 1), textureImageName=None):
     thickness = 1e-2  # for safety
     mesh = trimesh.creation.box(extents=[size, size, thickness])
     mesh.vertices[:, 2] -= thickness / 2
@@ -1041,7 +1041,7 @@ def create_plane(size=1000, color=None, normal=(0, 0, 1)):
                 dtype=float,
             ),
             material=trimesh.visual.material.SimpleMaterial(
-                image=Image.open(os.path.join(get_assets_dir(), "textures/checker.png")),
+                image=Image.open(os.path.join(get_assets_dir(), "textures/", textureImageName)),
             ),
         )
     else:
