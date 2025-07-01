@@ -266,6 +266,7 @@ class Plane(Primitive):
     textureImageName: Optional[str] = None
 
     def __init__(self, **data):
+        self.textureImageName = data.pop("textureImagePath") if "textureImagePath" in data else "checker.png"
         super().__init__(**data)
 
         if not isinstance(self.normal, tuple) or len(self.normal) != 3:
@@ -278,9 +279,6 @@ class Plane(Primitive):
             gs.raise_exception("`requires_jac_and_IK` must be False for `Plane`.")
 
         self.normal = tuple(np.array(self.normal) / np.linalg.norm(self.normal))
-
-        self.textureImageName = data.get("textureImagePath", "checker.png")
-
 
 ############################ Mesh ############################
 
