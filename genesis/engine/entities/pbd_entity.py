@@ -44,7 +44,7 @@ class PBDTetEntity(ParticleEntity):
         self._vfaces = np.array(self._vmesh.faces)
 
         self._mesh = self._vmesh.copy()
-        self._mesh.remesh(edge_len_abs=self.particle_size, fix=isinstance(self, PBD3DEntity))
+        # self._mesh.remesh(edge_len_abs=self.particle_size, fix=isinstance(self, PBD3DEntity))
 
     def _add_to_solver_(self):
         self._kernel_add_particles_edges_to_solver(
