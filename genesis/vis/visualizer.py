@@ -52,6 +52,11 @@ class Visualizer(RBC):
                 gs.raise_exception_from("No display detected. Use `show_viewer=False` for headless mode.", e)
             self._has_display = False
 
+        # Separate check for cv2.imshow: pyglet can query screen info even when
+        # X11 auth is broken (e.g., inaccessible XAUTHORITY in Docker), but
+        # cv2's GTK backend hangs indefinitely in that case.
+        self._has_cv2_display = self._has_display and gs.utils.can_cv2_display()
+
         if show_viewer:
             if gs._scene_registry:
                 gs.raise_exception(
@@ -298,6 +303,10 @@ class Visualizer(RBC):
     @property
     def has_display(self):
         return self._has_display
+
+    @property
+    def has_cv2_display(self):
+        return self._has_cv2_display
 
     @property
     def cameras(self):

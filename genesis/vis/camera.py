@@ -457,12 +457,12 @@ class Camera(RBC):
 
         # Colorize the segmentation map is necessary
         if seg_idxc_arr is not None:
-            if colorize_seg or (self._GUI and self._visualizer.has_display):
+            if colorize_seg or (self._GUI and self._visualizer.has_cv2_display):
                 seg_color_arr = self._visualizer.colorize_seg_idxc_arr(seg_idxc_arr)
             seg_arr = seg_color_arr if colorize_seg else seg_idxc_arr
 
         # Display images if requested and supported
-        if self._GUI and self._visualizer.has_display:
+        if self._GUI and self._visualizer.has_cv2_display:
             # Postpone import of OpenCV at runtime to reduce hard system dependencies
             import cv2
 

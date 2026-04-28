@@ -17,6 +17,13 @@ import cpuinfo
 import quadrants as qd
 import numpy as np
 import psutil
+# cv2 must be imported before pyglet on Linux: pyglet opens an Xlib display
+# connection and cv2's Qt/XCB backend must initialize X11 first or it deadlocks.
+if sys.platform == "linux" and os.environ.get("DISPLAY"):
+    try:
+        import cv2 as _cv2_preload  # noqa: F401
+    except ImportError:
+        pass
 import pyglet
 import torch
 
@@ -393,6 +400,53 @@ def has_display() -> bool:
     try:
         try_get_display_size()
         return True
+    except Exception:
+        return False
+
+
+def can_cv2_display() -> bool:
+    """
+    Check whether cv2.imshow() is safe to call in this process.
+
+    Two conditions allow display:
+    1. A readable XAUTHORITY cookie file exists (standard X11 auth).
+    2. The X server accepts unauthenticated connections (e.g. after ``xhost +local:``),
+       detected via a short-timeout raw X11 handshake.
+    """
+    import socket
+    import struct
+
+    if sys.platform != "linux":
+        return True
+
+    if not os.environ.get("DISPLAY"):
+        return False
+
+    # Check 1: valid MIT Magic Cookie
+    xauth = os.environ.get("XAUTHORITY", os.path.expanduser("~/.Xauthority"))
+    if os.path.isfile(xauth) and os.access(xauth, os.R_OK) and os.path.getsize(xauth) > 0:
+        return True
+
+    # Check 2: server accepts unauthenticated connections
+    display = os.environ.get("DISPLAY", "")
+    try:
+        display_num = int(display.split(":")[1].split(".")[0])
+    except (IndexError, ValueError):
+        return False
+
+    socket_path = f"/tmp/.X11-unix/X{display_num}"
+    if not os.path.exists(socket_path):
+        return False
+
+    try:
+        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        sock.settimeout(2.0)
+        sock.connect(socket_path)
+        # X11 ConnectionSetup (12 bytes): little-endian, protocol 11.0, no auth data
+        sock.sendall(struct.pack("BxHHHH2x", ord("l"), 11, 0, 0, 0))
+        reply = sock.recv(8)
+        sock.close()
+        return len(reply) >= 1 and reply[0] == 1  # 1=success, 0=failed, 2=authenticate
     except Exception:
         return False
 
